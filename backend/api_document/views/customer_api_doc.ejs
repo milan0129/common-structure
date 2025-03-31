@@ -1,0 +1,3143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+	<link href="https://unpkg.com/vuetify@1.0.17/dist/vuetify.min.css" type="text/css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons" rel="stylesheet">
+	<link rel="shortcut icon" href="<%= constants.BASE_URL_WITHOUT_API + constants.LOGO%>">
+	<title>
+		<%= constants.APP_NAME %> API LIST
+	</title>
+	<style type="text/css">
+		.medium-text {
+			font-size: 18px;
+			color: white;
+		}
+
+		.js div#preloader {
+			position: fixed;
+			left: 0;
+			top: 0;
+			z-index: 999;
+			width: 50%;
+			height: 50%;
+			overflow: visible;
+			background: #fff url('<%= constants.BASE_URL_WITHOUT_API %>api/public/logo/ripple.gif') no-repeat center center;
+		}
+	</style>
+</head>
+
+<body class="js">
+	<div id="preloader"></div>
+	<div id="app">
+		<v-app id="inspire">
+			<v-layout justify column>
+				<v-flex style="margin:10px auto 10px auto; padding:0px; text-align:center;" center right sm2 xs2 md2 lg2
+					xl2>
+					<img src='<%= constants.LOGO %>' width="80px"><br>
+					<strong style="font-size:24px;">
+						<%= constants.APP_NAME %> API LIST
+					</strong><br><br>
+					<v-alert :value="true" outline color="white" style="padding:5px;">
+						<v-chip color="black" text-color="white">
+							<v-avatar>
+								<v-icon>bookmark</v-icon>
+							</v-avatar><b>TOTAL {{messages.length}} APIs</b>
+						</v-chip>
+					</v-alert>
+					<!-- <v-alert :value="true" outline color="white" style="padding:5px;">
+						<v-chip color="black" text-color="white">
+							<v-avatar>
+								<v-icon>label_important</v-icon>
+							</v-avatar><b>If Device Token not get, pass 0 only</b>
+						</v-chip>
+						<v-chip color="black" text-color="white">
+							<v-avatar>
+								<v-icon>label_important</v-icon>
+							</v-avatar><b>Upload images on S3 bucket</b>
+						</v-chip>
+					</v-alert> -->
+				</v-flex>
+				<v-flex style="margin:0px auto; padding:0px;" center right sm2 xs2 md2 lg2 xl2>
+
+					<div id="main1" style="margin:0px auto; position:sticky;">
+						<table border="0" cellpadding="10" cellspacing="10" width="100%"
+							style="background: linear-gradient(150deg, #121213 50%, #1a1c27) !important;color: #fff;font-weight: bold;">
+							<tr>
+								<td><b>Server URL </b></td>
+								<td>==>> &nbsp;&nbsp;<b>
+										<%= constants.PROXY_URL %>api/v1/
+									</b></td>
+							</tr>
+							<tr>
+								<td><b>Header Parameters </b></td>
+								<td>==>> &nbsp;&nbsp;<b>api-key, app, token, accept-language</b></td>
+							</tr>
+							<tr>
+								<td><b>api-key </b></td>
+								<td>==>> &nbsp;&nbsp;<b>
+										<%= process.env.API_KEY %>
+									</b></td>
+							</tr>
+							<tr>
+								<td><b>KEY </b></td>
+								<td>==>> &nbsp;&nbsp;<b>
+										<%= process.env.KEY %>
+									</b></td>
+							</tr>
+							<tr>
+								<td><b>IV </b></td>
+								<td>==>> &nbsp;&nbsp;<b>
+										<%= process.env.IV %>
+									</b></td>
+							</tr>
+                            <!-- <tr>
+								<td><b>Customer Signup Steps </b></td>
+								<td>==>> &nbsp;&nbsp;<b>
+                                    VERIFY_PHONE, PERSONAL_DETAILS, ABOUT, SUGGESTED, COMPLETED
+									</b></td>
+							</tr>
+                            <tr>
+								<td><b>Makeup Artist Signup Steps </b></td>
+								<td>==>> &nbsp;&nbsp;<b>
+                                    VERIFY_PHONE, PERSONAL_DETAILS, ABOUT, SERVICES_LIST, GALLERY, TRAVEL, WEEKLY_AVAILABILITY, PRODUCT_LIST, SUBSCRIPTION, BUSINESS_AND_BANKING, SUGGESTED, COMPLETED
+									</b></td>
+							</tr>
+                            <tr>
+								<td><b>Brand Signup Steps </b></td>
+								<td>==>> &nbsp;&nbsp;<b>
+                                    VERIFY_PHONE, PERSONAL_DETAILS, ABOUT, BUSINESS_AND_BANKING, SUGGESTED, COMPLETED
+									</b></td>
+							</tr> -->
+						</table>
+						<br> <br>
+					</div>
+				</v-flex>
+				<v-flex style="margin:0px auto;" center right sm2 xs2 md2 lg2 xl2>
+					<a target="_blank" href='/v1/api_document/code'>
+						<v-btn color="blue-grey" class="white--text">
+							CODE REFERENCE <v-icon right dark>code</v-icon>
+						</v-btn>
+					</a>
+					<a target="_blank" href='http://13.233.19.205:5551/sourcenow/enc_dec.html'>
+						<v-btn color="blue-grey" class="white--text">
+							ENCRYPTION URL <v-icon right dark>lock</v-icon>
+						</v-btn>
+					</a>
+                    <a href='/v1/api_document/user_list'>
+						<v-btn color="blue-grey" class="white--text">
+							User List <v-icon right dark>person</v-icon>
+						</v-btn>
+					</a>
+				</v-flex>
+
+				<v-expansion-panel popout>
+					<v-expansion-panel-content v-for="(message, i) in messages" :key="i" hide-actions>
+						<v-layout slot="header" align-center row spacer>
+							<v-flex sm1 xs1 md1 lg1 xl1>
+								<v-avatar slot="activator" size="36px">
+									<v-icon :color="message.color">{{ message.icon }}</v-icon>
+								</v-avatar>
+							</v-flex>
+							<v-flex sm3 xs3 md3 lg3 xl3>
+								<strong v-html="message.title"></strong>
+								<v-chip v-if="message.meth" :color="`${message.color} lighten-4`" label small
+									class="ml-0">
+									{{ message.meth }}
+								</v-chip>
+							</v-flex>
+							<v-flex sm3 xs3 md3 lg3 xl3>
+								<strong v-html="message.name"></strong><br>
+								<span v-if="message.updated" style="color:orange">{{ message.updated }}</span>
+								<span v-if="message.new_added" style="color:green"><span
+										v-html="message.new_added"></span></span>
+							</v-flex>
+							<v-flex sm4 xs4 md4 lg4 xl4>
+								<v-flex v-if="message.link" class="grey--text" ellipsis hidden-sm-and-down>
+									{{ message.link }}
+								</v-flex>
+								<v-flex class="grey--text" ellipsis hidden-sm-and-down>
+									<span v-if="message.imp" style="color:darkred">SHOW IMPORTANT NOTE INSIDE</span>
+								</v-flex>
+							</v-flex>
+						</v-layout>
+						<v-card dark>
+							<v-container>
+								<v-layout v-if="message.new_tag === '0'">
+									<v-flex xs12 align-end flexbox>
+										<v-alert v-if="message.new_added" :value="true" outline color="white"
+											style="padding:5px;">
+											<v-chip color="green" text-color="white">
+												<v-avatar>
+													<v-icon>fiber_new</v-icon>
+												</v-avatar> NEW
+											</v-chip>
+											<span v-html="message.new_added"></span>
+										</v-alert>
+										<v-alert v-if="message.updated" :value="true" outline color="white"
+											style="padding:5px;">
+											<v-chip color="orange" text-color="white">
+												<v-avatar>
+													<v-icon>update</v-icon>
+												</v-avatar> UPDATED
+											</v-chip>
+											<span>{{ message.updated }}</span>
+										</v-alert>
+										<v-alert :value="true" outline color="white" style="padding:5px;">
+											<v-chip color="teal" text-color="white">
+												<v-avatar>
+													<v-icon>check_circle</v-icon>
+												</v-avatar> MANDATORY
+											</v-chip>
+											{{message.mandatory}}
+										</v-alert>
+										<v-alert :value="true" outline color="white" style="padding:5px;">
+											<v-chip outline color="#F0F4C3">
+												<v-avatar>
+													<v-icon>check_circle</v-icon>
+												</v-avatar>OPTIONAL
+											</v-chip>
+											<span>{{ message.optional }}
+										</v-alert>
+										<v-alert v-if="message.link" :value="true" outline color="white"
+											style="padding:5px;">
+											<v-chip color="light-green darken-2" text-color="white">
+												<v-avatar>
+													<v-icon>link</v-icon>
+												</v-avatar> LINK
+											</v-chip>
+											<span>{{ message.link }}
+										</v-alert>
+										<v-alert v-if="message.imp" :value="true" outline color="white"
+											style="padding:5px;">
+											<v-chip color="red darken-2" text-color="white">
+												<v-avatar>
+													<v-icon>new_releases</v-icon>
+												</v-avatar> IMPORTANT
+											</v-chip>
+											<p v-html="message.imp"></p>
+										</v-alert>
+										<v-alert v-if="message.notes" :value="true" outline color="white"
+											style="padding:5px;">
+											<v-chip color="blue lighten-1" text-color="white">
+												<v-avatar>
+													<v-icon>bookmark</v-icon>
+												</v-avatar> NOTES
+											</v-chip>
+											<span>{{ message.notes }}
+										</v-alert>
+										<v-alert v-if="message.example" :value="true" outline color="white"
+											style="padding:5px;">
+											<v-chip color="red darken-2" text-color="white">
+												<v-avatar>
+													<v-icon>check_circle</v-icon>
+												</v-avatar> EXAMPLE
+											</v-chip>
+											<p v-html="message.example"></p>
+										</v-alert>
+										<v-layout style="margin-top:-4px">
+											<v-flex xs6 align-end flexbox>
+												<v-alert :value="true" outline color="yellow" icon="priority_high"
+													style="padding:5px;">
+													<span class="grey--text">HEADER : {{ message.is_header }}, PUSH : {{
+														message.is_push }}</span><br>
+													<span>HEADER : {{ message.header }}</span>
+												</v-alert>
+											</v-flex>
+											<v-flex xs6 align-end flexbox>
+												<v-alert style="margin-left:4px; padding:5px;" :value="true" outline
+													color="yellow" icon="priority_high">
+													STATUS : <span v-html="message.status"></span>
+												</v-alert>
+											</v-flex>
+										</v-layout>
+									</v-flex>
+								</v-layout>
+							</v-container>
+							<v-card-actions>
+							</v-card-actions>
+						</v-card>
+					</v-expansion-panel-content>
+				</v-expansion-panel>
+			</v-layout>
+		</v-app>
+	</div>
+	<div id="asd"></div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+	<script src="https://unpkg.com/vuetify@1.0.17/dist/vuetify.min.js"></script>
+	<script src="https://unpkg.com/babel-polyfill/dist/polyfill.min.js"></script>
+	<script>
+
+		jQuery(document).ready(function ($) {
+			$('#preloader').fadeOut('slow', function () { $(this).remove(); });
+		});
+
+		var base_url = "<%= constants.PROXY_URL %>api/v1/";
+		var base_url_without_api = "<%= constants.BASE_URL_WITHOUT_API %>";
+		let i = 1;
+
+		new Vue({
+			el: '#app',
+			data: () => ({
+				messages: [
+						{
+							new_tag: '1',
+							color: 'blue',
+							title: 'Admin ',
+							icon: 'groups',
+						},
+
+                    {
+						new_tag: '0',
+						color: 'blue',
+						icon: 'groups',
+						title: i++ + ' : ADMIN:AUTH',
+						name: 'Admin login',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/ad_signin",
+						mandatory: "email , password",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,",
+						notes: "",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'groups',
+						title: i++ + ' : ADMIN:AUTH',
+						name: 'Admin Logout',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/ad_logout",
+						mandatory: "",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used for admin logout",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'groups',
+						title: i++ + ' :ADMIN:Admin info',
+						name: 'Admin details ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/get_adDetails",
+						mandatory: "",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used to get admin details",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'groups',
+						title: i++ + ' :ADMIN : DASHBOARD',
+						name: 'Admin dashboard count ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/dashBoardCount",
+						mandatory: "",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used to show count of dashbaord",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+				{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'groups',
+						title: i++ + ' :ADMIN PROFILE',
+						name: 'Admin profile updation ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad_editProfile",
+						mandatory: "profile_picture, first_name, last_name, email",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used to update admin profile updation",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'groups',
+						title: i++ + ' :ADMIN PROFILE',
+						name: 'Admin profile updation ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad_editProfile",
+						mandatory: "profile_picture, first_name, last_name, email",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used to update admin profile updation",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'groups',
+						title: i++ + ' :ADMIN CHANGE PASSWORD',
+						name: 'Admin change password ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad_changePassword",
+						mandatory: "old_password, new_password",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for changing password",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : ACCOUNT MANAGER',
+						name: 'Add account manager',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/add_accountManager",
+						mandatory: "fisrt_name, last_name, email",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for adding the account manager",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : ACCOUNT MANAGER',
+						name: 'List account manager',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/list_ac_manager",
+						mandatory: "page, per_page,sort_by [created_at,fisrt_name,last_name]",
+						optional: "search",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used  by admin for listing the account manager",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : ACCOUNT MANAGER',
+						name: 'View account manager profile details',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/view_account_manager",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used  by admin for viewing account manager profile details.",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : ACCOUNT MANAGER',
+						name: 'Block - Unblock account manager',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/block_unblockManager",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for blocking and unblocking the account manager",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : ACCOUNT MANAGER',
+						name: 'Edit account manager',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/editManager",
+						mandatory: "id, first_name, last_name, email, profile_picture, country_code, mobile_no",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for updating the account manager details ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : ACCOUNT MANAGER',
+						name: 'Delete account manager',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/deleteManager",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for delete account manager ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : SUPPLIER ',
+						name: 'List not approved/ approved  supplier list ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/lt_na_supplier",
+						mandatory: "page,per_page,approval ['0','1'],sort_by [created_at,first_name,last_name]",
+						optional: "search",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for listing the not approved - approved supplier list ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : SUPPLIER ',
+						name: 'Get not approved supplier details  ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/ltNa_sp_details",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for get details of supplier",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : SUPPLIER ',
+						name: 'Supplier request accept or reject',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/na_sp_approvalStatus",
+						mandatory: "id, document_verified [0,1],profile_verified [0,1] ",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for accepting or rejecting the supplier ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : SUPPLIER ',
+						name: 'Supplier block unblock ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/block_unblockSupplier",
+						mandatory: "id ",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for blocking unblocking the supplier ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : SUPPLIER ',
+						name: 'Supplier delete from admin',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/deleteSupplier",
+						mandatory: "id ",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for deleting the supplier",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CUSTOMER ',
+						name: 'List customer | applied for approval ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/ad_list_customer",
+						mandatory: "page, per_page, verified [0,1],sort_by [created_at,first_name,last_name]",
+						optional: "search",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for listing the customer and applier for verification supplier",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CUSTOMER ',
+						name: 'Block un block customer',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/block_unblockCustomer",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for block un block customer",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CUSTOMER ',
+						name: 'customer details ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/customer_details",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for block un block customer",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CUSTOMER ',
+						name: 'Delete customer',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/deleteCustomer",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for delete customer",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : DOCUMENTS & CERTIFICATIONS & TAGS ',
+						name: 'CERTIFICATE - add certificate ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/add_certificate",
+						mandatory: "logo, name",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for adding certifications",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : DOCUMENTS & CERTIFICATIONS & TAGS ',
+						name: 'CERTIFICATE - list certifications',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/lt_certifications",
+						mandatory: "page, per_page, sort_by[created_at, id, logo]",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for listing certication",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : DOCUMENTS & CERTIFICATIONS & TAGS ',
+						name: 'CERTIFICATE - delete certificate',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/deleteCertificate",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for delete certificate",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+			
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : DOCUMENTS & CERTIFICATIONS & TAGS ',
+						name: 'CERTIFICATE - update certificate',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/update_certification",
+						mandatory: "id,name, logo",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for updating certification details",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : DOCUMENTS & CERTIFICATIONS & TAGS ',
+						name: 'DOCUMENT - add document',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/add_doc",
+						mandatory: "name",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for adding documents",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : DOCUMENTS & CERTIFICATIONS & TAGS ',
+						name: 'DOCUMENT - list documents',
+						meth: 'GET',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/lt_documents",
+						mandatory: "page,per_page, sort_by[created_at,id]",
+						optional: "search",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for listing documents",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : DOCUMENTS & CERTIFICATIONS & TAGS ',
+						name: 'DOCUMENT - delete document',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/deleteDocuments",
+						mandatory: "id",
+						optional: "search",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for deleting document",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : DOCUMENTS & CERTIFICATIONS & TAGS ',
+						name: 'DOCUMENT - update document',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/update_document",
+						mandatory: "id, name",
+						optional: "search",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for updating document details",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : DOCUMENTS & CERTIFICATIONS & TAGS ',
+						name: 'TAG - add tag',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/add_tag",
+						mandatory: "name",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for adding tag",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : DOCUMENTS & CERTIFICATIONS & TAGS ',
+						name: 'TAG - list tag',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/lt_tags",
+						mandatory: "page,per_page,sort_by",
+						optional: "search",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for listing tag",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : DOCUMENTS & CERTIFICATIONS & TAGS ',
+						name: 'TAG - delete tag',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/deleteTag",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for delete tag",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : DOCUMENTS & CERTIFICATIONS & TAGS ',
+						name: 'TAG - update tag',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/update_tag",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for updating tags",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CATEGORY ',
+						name: 'Add main category',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/product/add_categories",
+						mandatory: "name, picture, description",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for add main categories",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CATEGORY ',
+						name: 'List categories',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/product/list_category",
+						mandatory: "page, per_page, sort_by",
+						optional: "search",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for list categories",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CATEGORY ',
+						name: 'Edit categories',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/product/edit_categories",
+						mandatory: "id,name,picture,description",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for edit category details",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CATEGORY ',
+						name: 'Active Inactive categories',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/product/activeInactive_categories",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for active inactive categories",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CATEGORY ',
+						name: 'Delete categories',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/product/delete_categories",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for delete categories",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : BLOG ',
+						name: 'Add dispplay category',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/product/add-blog-display",
+						mandatory: "name",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for add display category on web ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : BLOG ',
+						name: 'Add blog sub category',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/product/add-blog-subcategory",
+						mandatory: "display_id,name",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for add display category on web ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : BLOG ',
+						name: 'list blog sub category ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/product/list-blog-subcategory",
+						mandatory: "display_id,page,per_page,sort_by [created_at, id]",
+						optional: "search",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for list sub category of blogs while performing crud of sub category",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : BLOG ',
+						name: 'Active inactive  blog sub category ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/product/activeInactive_blogsSubcategory",
+						mandatory: "display_id,id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for active inactive sub category of blogs",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : BLOG ',
+						name: ' Delete blog sub category ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/product/delete_blogsSubcategory",
+						mandatory: "display_id,id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for delete sub category of blogs",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : BLOG ',
+						name: 'list blog sub category ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/product/list-blog-subcategory",
+						mandatory: "display_id,page,per_page,sort_by [crated_at, id]",
+						optional: "search",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for list sub category  ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : BLOG ',
+						name: 'Add blogs',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/product/add_blogs",
+						mandatory: "display_id,blog_category_id,title, description,picture,content,is_top ['0','1']",
+						optional: "category_id,link",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for adding blogs from admin panel",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+
+					
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : BLOG ',
+						name: 'List blogs',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/product/list_blogs",
+						mandatory: "page, per_page, sort_by [created_at, id]",
+						optional: "search",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for listing blogs",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : BLOG ',
+						name: 'Active Inactive blogs',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/product/activeInactive_blogs",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for active inactive blogs",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : BLOG ',
+						name: 'Delete blog',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/product/delete_blogs",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for active inactive blogs",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : BLOG ',
+						name: 'View blog',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/product/view_blogs",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for view blog ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : BLOG ',
+						name: 'Edit blog',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/product/edit_blogs",
+						mandatory: "id, display_id, blog_category_id,category_id,title,description,picture,content,is_top [0,1]",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for view blog ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : BLOG ',
+						name: 'list category- for blog',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/product/list_categoryBlog",
+						mandatory: "",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for listing category for blog adding",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : BLOG ',
+						name: 'list sub category- for blog adding blogs',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/product/list_subCategoryBlog",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for listing sub category for blog adding",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : NEWSLETTER',
+						name: 'Add newsletter',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/add_newsletter",
+						mandatory: "subject , content",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for adding newsletter",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : NEWSLETTER',
+						name: 'List newsletter subscribers',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/listNewsLetterSubscribers",
+						mandatory: "page, per_page,sort_by [created_at, id]",
+						optional: "search",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for listing subscriber of newsletter",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : NEWSLETTER',
+						name: 'List admin newsletter ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/listNewsLetter",
+						mandatory: "page, per_page,sort_by [created_at, id]",
+						optional: "search",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for listing newsletter sended by admin",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - Department',
+						name: 'Department - add ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/add_department",
+						mandatory: "name",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for adding department in career page",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - Department',
+						name: 'Department - Edit ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/edit_department",
+						mandatory: "id,name",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for edit department name in admin panel",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - Department',
+						name: 'Department - Active /Inactive ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/activeInactive_department",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for active and inactive department in career",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - Department',
+						name: 'Department - Delete ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/delete_department",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for delete department",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - Department',
+						name: 'Department - Listing ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/listdepartment",
+						mandatory: "page, per_page,sort_by",
+						optional: "search",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for listing department",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - Location',
+						name: 'location - add ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/add_location",
+						mandatory: "address",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for adding location",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - Location',
+						name: 'location - edit ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/edit_location",
+						mandatory: "id,address",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for edit location in career",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - Location',
+						name: 'location - active inactive ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/activeInactive_location",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for active inactive location.",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - Location',
+						name: 'location - delete ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/delete_location",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for delete location.",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - Location',
+						name: 'location - list  ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/listlocations",
+						mandatory: "page,per_page,sort_by",
+						optional: "search",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for listing location",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - Worktype',
+						name: 'worktype - add ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/add_worktype",
+						mandatory: "name",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for adding worktype",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - Worktype',
+						name: 'worktype - edit ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/edit_worktype",
+						mandatory: "id,name",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for editing worktype",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - Worktype',
+						name: 'worktype - Active/inactive',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/activeInactive_worktype",
+						mandatory: "id,name",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for active - inactive worktype",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - Worktype',
+						name: 'worktype - Delete',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/delete_worktype",
+						mandatory: "id",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for delete worktype",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - Worktype',
+						name: 'worktype - listing',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/listworktype",
+						mandatory: "page, per_page,sort_by ",
+						optional: "search",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for list worktype",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - JOB',
+						name: 'post job',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/post_job",
+						mandatory: "department_id, location_id,work_type_id,description,link, name ",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for post job",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - JOB',
+						name: 'List department , location , worktype',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/lstDepLocWType",
+						mandatory: "type [department,location,work_type]",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin while adding a job for listing department , location , work type",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - JOB ',
+						name: 'job update',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/update_job",
+						mandatory: "id, department_id, location_id,work_type_id,description,link, name ",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for update job",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - JOB  ',
+						name: 'job active inactive',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/activeInactive_job",
+						mandatory: "id ",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for active inactive job",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - JOB ',
+						name: 'job delete',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/delete_job",
+						mandatory: "id ",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for delete job",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'blue',
+						icon: 'supervisor_account',
+						title: i++ + ' : CAREER - JOB ',
+						name: 'job listing',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/listjobs",
+						mandatory: "page, per_page,sort_by [created_at] ",
+						optional: "search",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used by admin for list jobs at admin side",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+
+
+					{
+							new_tag: '1',
+							color: 'purple',
+							title: 'INTEREST',
+							icon: 'interests',
+					},
+
+					{
+						new_tag: '0',
+						color: 'purple',
+						icon: 'interests',
+						title: i++ + ' :INTEREST',
+						name: 'Add interest',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/add_interest",
+						mandatory: "name,picture,description",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used for adding interest",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'purple',
+						icon: 'interests',
+						title: i++ + ' :INTEREST',
+						name: 'List interest',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/list_interest",
+						mandatory: "page,per_page",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used for listing the interest interest",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'purple',
+						icon: 'interests',
+						title: i++ + ' :INTEREST',
+						name: 'Update interest',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/update_interest",
+						mandatory: "id, name , picture",
+						optional: "",
+						is_header: "Yes",
+						is_push: "NO",
+						header: "API-KEY,token[admin's token]",
+						notes: "this api used for updating the interest ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+							new_tag: '1',
+							color: 'yellow',
+							title: 'CMS',
+							icon: 'description',
+					},
+
+					{
+						new_tag: '0',
+						color: 'yellow',
+						icon: 'description',
+						title: i++ + ' :CMS',
+						name: 'List all cms pages',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/ad_listcms",
+						mandatory: "",
+						optional: "",
+						is_header: "NO",
+						is_push: "NO",
+						header: "",
+						notes: "this api used for listing all cms pages",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'yellow',
+						icon: 'description',
+						title: i++ + ' :CMS',
+						name: 'Update the cms page',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/update_cms_page",
+						mandatory: "title[required_in:about_us,contact_us,privacy_policy,terms_condition],content",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key , token [admin's token]",
+						notes: "this api used for listing all cms pages",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'yellow',
+						icon: 'description',
+						title: i++ + ' :CMS',
+						name: 'Add faq questions',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/ad_addFAQ",
+						mandatory: "question , answer",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key , token [admin's token]",
+						notes: "this api is used by admin for adding faq",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'yellow',
+						icon: 'description',
+						title: i++ + ' :CMS',
+						name: 'Update FAQ page',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/update_faq",
+						mandatory: "id, question , answer",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key , token [admin's token]",
+						notes: "this api is used by admin to update faq",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'yellow',
+						icon: 'description',
+						title: i++ + ' :CMS',
+						name: 'LIST FAQ PAGE',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/ad/list_faq",
+						mandatory: "page,per_page",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key , token [admin's token]",
+						notes: "this api is used by admin to list faq pages",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'yellow',
+						icon: 'description',
+						title: i++ + ' :CMS',
+						name: 'Contact us',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/contact_us",
+						mandatory: "first_name, last_name, email,country_code, mobile_no,bussiness_title,company_name,company_size,here_about_us,message",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key ",
+						notes: "this api is used by customer for contact us purpose",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+							new_tag: '1',
+							color: 'red',
+							title: 'SUPPLIER',
+							icon: 'manage_accounts',
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER- list document',
+						name: 'list document',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/lt_documents",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [supplier's]",
+						notes: "this api used for list documents ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER- list tags',
+						name: 'list tags',
+						meth: 'GET',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/sp_getTags",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [supplier's]",
+						notes: "this api used for list tags ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER- list certificate',
+						name: 'list certificate',
+						meth: 'GET',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/lt_certificate",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [supplier's]",
+						notes: "this api used for list tags ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER',
+						name: 'Sign up supplier',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/sign_up",
+						mandatory: "first_name, last_name, country_code, mobile_no, email, password",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key",
+						notes: "this api used for sign up supplier",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER',
+						name: 'Supplier sign in ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/sign_in",
+						mandatory: "email , password",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key",
+						notes: "this api used for sign in supplier",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER',
+						name: 'Supplier verify OTP',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/verify_otp",
+						mandatory: "country_code , mobile_no, otp",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [supplier's]",
+						notes: "this api used for verify supplier mobile no by OTP",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER',
+						name: 'Supplier sign out ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/sp_logout",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key",
+						notes: "this api used for supplier logout",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER',
+						name: 'Supplier email verification',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/email_verification",
+						mandatory: "token",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key",
+						notes: "this api used to email verification by supplier ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER',
+						name: 'Supplier complete profile ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/sp_complete_profile",
+						mandatory: "profile_picture,cover_image,gst_number,establisment_year,company_name,company_type,address,website_link,why_do_you_signup,your_company_details,about,tags,shipping_company_icon,document,certification,past_company_name,export[0,1]",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key",
+						notes: "tags:['1','2',]=> 1,2 represent id's of tags.document:{ '1': 'default.jpg', '2': 'default.jpg'} => 1,2 represnt id of document and respected value shows the data ,certification:{ '1': 'default.jpg', '2': 'default.jpg'} ,past_company_name:{'varmora','accord'} ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER',
+						name: 'Supplier add update interest ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/add_user_interest",
+						mandatory: "interest ",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [customer's]",
+						notes: " need to send in the format of ['1','2','3','4']",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+
+
+
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER',
+						name: 'Supplier Change password ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/change_password",
+						mandatory: "old_password , new_password",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [supplier's token]",
+						notes: "this api used for sign in supplier",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER',
+						name: 'Supplier forget password ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/forget_password",
+						mandatory: "email",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key",
+						notes: "this api used by supplier for forget password",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER',
+						name: 'Supplier reset password By forget password',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/change_forget_pass",
+						mandatory: "token, password",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key",
+						notes: "this api used by supplier to reset password by providing the new password",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER',
+						name: 'Get suppllier details ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/get_supplierinfo",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [supplier's token]",
+						notes: "this api used for getting the details of supplier",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER',
+						name: 'Update supplier profile details ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/sp_editprofile",
+						mandatory: "first_name, last_name, email, country_code, mobile_no, profile_picture",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [supplier's token]",
+						notes: "this api used for updating supplier profile details ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+					
+					
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER -list supplier doc, certificate, tags',
+						name: 'Get suppliers document certificate tags ',
+						meth: 'GET',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/get_supplierDocCertiTags",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [supplier's token]",
+						notes: "this api used for listing supplier's documents , certificate, and tags",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER - update document',
+						name: 'update  supplier documents ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/update_documents",
+						mandatory: "document, document_id",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [supplier's token]",
+						notes: "document- document value , document_id - id of document",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER - add document',
+						name: 'add  supplier documents ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/add_documents",
+						mandatory: "document, document_id",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [supplier's token]",
+						notes: "document- document value , document_id - id of document",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER - delete documents',
+						name: 'delete supplier documents ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/delete_document",
+						mandatory: "id",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [supplier's token]",
+						notes: "need data in the format like document:{'1':'123.jpg'} -> 1 represnt id and 123.jpg represent it's value",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER - update certification',
+						name: 'update-add  supplier certificate ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/update_certificate",
+						mandatory: "id, certification",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [supplier's token]",
+						notes: "",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER - add certification',
+						name: 'update-add certificate ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/add_certificate",
+						mandatory: "certificate_id, certification",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [supplier's token]",
+						notes: "",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER - delete certification',
+						name: 'delete supplier certification ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/delete_certification",
+						mandatory: "id",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [supplier's token]",
+						notes: "need data in the format like document:{'1':'123.jpg'} -> 1 represnt id and 123.jpg represent it's value",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER - add  tags',
+						name: 'add supplier tags',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/add_tag",
+						mandatory: "tag_id",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [supplier's token]",
+						notes: "need data in the format like tags:['1','1'] -> 1 represnt id of tag ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'red',
+						icon: 'manage_accounts',
+						title: i++ + ' :SUPPLIER - delete tags',
+						name: 'Delete supplier tags',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/supplier/delete_tags",
+						mandatory: "id",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [supplier's token]",
+						notes: " ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+							new_tag: '1',
+							color: 'brown',
+							title: 'ACCOUNT MANAGER',
+							icon: 'shield_person',
+					},
+
+					{
+						new_tag: '0',
+						color: 'brown',
+						icon: 'shield_person',
+						title: i++ + ' :ACCOUNT MANAGER',
+						name: 'Change account manager password',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/acManager/change_password",
+						mandatory: "old_password, new_password",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [account manager's token]",
+						notes: "this api used for changing account manager password",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'brown',
+						icon: 'shield_person',
+						title: i++ + ' :ACCOUNT MANAGER:Sign in',
+						name: 'Account manager sign in ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/acManager/sign_in",
+						mandatory: "email, password",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key",
+						notes: "this api used for account manager login ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'brown',
+						icon: 'shield_person',
+						title: i++ + ' :ACCOUNT MANAGER',
+						name: 'Account manager Logout ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/acManager/am_logout",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [Account manager's token]",
+						notes: "this api used for account manager for logging out",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'brown',
+						icon: 'shield_person',
+						title: i++ + ' :ACCOUNT MANAGER',
+						name: 'Account manager Edit profile ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/acManager/acM_editprofile",
+						mandatory: "first_name, last_name, mobile_no, country_code, mobile_no, profile_picture",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [Account manager's token]",
+						notes: "this api used for account manager profile updatation",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					// am_getProfileDetails
+
+
+					{
+						new_tag: '0',
+						color: 'brown',
+						icon: 'shield_person',
+						title: i++ + ' :ACCOUNT MANAGER',
+						name: 'Account manager get profile details api',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/acManager/am_getProfileDetails",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [Account manager's token]",
+						notes: "this api used for getting account manager profile details",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					// {
+					// 	new_tag: '0',
+					// 	color: 'brown',
+					// 	icon: 'shield_person',
+					// 	title: i++ + ' :ACCOUNT MANAGER:Sign in',
+					// 	name: 'Account manager get profile details',
+					// 	meth: 'POST',
+					// 	link: "<%= constants.PROXY_URL %>/api/v1/acManager/am_getProfileDetails",
+					// 	mandatory: "",
+					// 	optional: "",
+					// 	is_header: "YES",
+					// 	is_push: "NO",
+					// 	header: "api-key, token",
+					// 	notes: "this api used for getting account manager profile details ",
+					// 	example: '',
+					// 	status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+					// 	imp: "",
+					// },
+
+					{
+							new_tag: '1',
+							color: 'teal',
+							title: 'CUSTOMER',
+							icon: 'account_circle',
+					},
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER: COUNTRY CODE ',
+						name: 'Country code ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/lt_cc",
+						mandatory: "",
+						optional: "search",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key",
+						notes: "this api used for list country code in all module",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER: DOCUMENT NAME LIST ',
+						name: 'document list  ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/lt_documents",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, customer token",
+						notes: "this api used for list all document list names",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER: SUBSCRIBE NEWSLETTER ',
+						name: 'Subscribe newsletter ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/subscribeNewsletter",
+						mandatory: "email",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key",
+						notes: "this api used to subscribe newsletter",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER: category listing ',
+						name: 'Category listing',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/list_category",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key",
+						notes: "this api used to list category ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER:Sign in',
+						name: 'Customer sign in ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/sign_in",
+						mandatory: "email, password",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key",
+						notes: "this api used for customer to sign in.",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER:Sign up',
+						name: 'Customer sign up ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/sign_up",
+						mandatory: "first_name,last_name, country_code,mobile_no,email,password",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key",
+						notes: "this api used for customer to sign up.",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER: Logout',
+						name: 'Customer logout ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/c_logout",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [customer's token]",
+						notes: "this api used for customer to logout.",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER - Forget password',
+						name: 'Customer forget password  ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/forget_password",
+						mandatory: "email",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key",
+						notes: "this api used for customer to forget password.",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER - chnage password',
+						name: 'Customer reset password by forget password   ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/change_forget_pass",
+						mandatory: "token, password",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key",
+						notes: "this api used for customer to reset password by cliking the forget password",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER - complete profile ',
+						name: 'Customer complete profile in sign up ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/c_complete_profile",
+						mandatory: "shipping_company_icon, company_name, company_type, address,website,why_do_you_signup,your_company_details, establisment_year,gstnumber",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [customer's token]",
+						notes: "this api used for customer to complete profile in sign up flow ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER - ',
+						name: 'Customer email verification ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/c_email_verification",
+						mandatory: "token",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key",
+						notes: "this api used for verify customer",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER - change password by providing ',
+						name: 'Customer change password ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/change_password",
+						mandatory: "old_password, new_password",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [customer's token]",
+						notes: "this api used for customer to reset password by providing old password ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER ',
+						name: 'Customer update profile and company profile details ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/c_profileInfo-update",
+						mandatory: "first_name, last_name,email, profile_picture,country_code ,mobile_no, shipping_company_icon,company_name, company_type, website_link,address,gst_number,establisment_year,about,documents",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [customer's token]",
+						notes: "need documents details in json for example:- 'documents': {'gst_certification': 'default.jpg','pan_card': 'default.jpg'}",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER - update  document',
+						name: 'Customer update document',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/update_documents",
+						mandatory: "id , document",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [customer's token]",
+						notes: "",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER - add  document',
+						name: 'Customer add document',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/add_documents",
+						mandatory: "document_id , document",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [customer's token]",
+						notes: "",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER - delete document',
+						name: 'Customer delete document  ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/delete_document",
+						mandatory: "id",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [customer's token]",
+						notes: " ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER ',
+						name: 'Customer add billing address ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/add_billing_address",
+						mandatory: "address, country, state, city,postal_code",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [customer's token]",
+						notes: "",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER ',
+						name: 'Customer delete billing address ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/del_billing_address",
+						mandatory: "id",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [customer's token]",
+						notes: "",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER ',
+						name: 'Customer update billing address',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/update_billing_address",
+						mandatory: "id, address, country, state, city, postal_code",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [customer's token]",
+						notes: "",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER :PROFILE',
+						name: 'Invite supplier',
+						meth: 'GET',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/inviteSp",
+						mandatory: "email, name",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [customer's token]",
+						notes: "",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER :PROFILE',
+						name: 'Customer get all billing address',
+						meth: 'GET',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/get_billing_address",
+						mandatory: "id, address, country, state, city, postal_code",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [customer's token]",
+						notes: "",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER:PROFILE ',
+						name: 'Customer get all company and profile details',
+						meth: 'GET',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/get_profileAndCompany_details",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [customer's token]",
+						notes: "",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER: list interest ',
+						name: 'List interest in sign up flow and profile module ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/list_interest",
+						mandatory: "page, per_page",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key",
+						notes: "",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER : Add/ update inetrest',
+						name: 'Customer add update interest ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/add_user_interest",
+						mandatory: "interest ",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [customer's]",
+						notes: " need to send in the format of ['1','2','3','4']",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER : Add/ update inetrest',
+						name: 'Customer list user interest ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/listUser_interest",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [customer's]",
+						notes: " ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+
+					{
+						new_tag: '0',
+						color: 'teal',
+						icon: 'account_circle',
+						title: i++ + ' :CUSTOMER : PROFILE',
+						name: 'Customer verification from admin ',
+						meth: 'POST',
+						link: "<%= constants.PROXY_URL %>/api/v1/user/applyUser_verification",
+						mandatory: "",
+						optional: "",
+						is_header: "YES",
+						is_push: "NO",
+						header: "api-key, token [customer's]",
+						notes: " ",
+						example: '',
+						status: "<br>1. HTTP_OK[200] - code : 0 <br>2. HTTP_OK[200] - code : 1 <br>3. HTTP_OK[200] - code : 2",
+						imp: "",
+					},
+
+					]
+			})
+		})
+	</script>
+</body>
+
+</html>

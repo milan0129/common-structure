@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoJS Encryption & Decryption</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #6a5acd;
+        }
+
+        button {
+            background-color: #9c8cc3;
+            color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #7a6b9c;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            resize: vertical;
+        }
+
+        .box {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+
+        h3 {
+            margin: 0;
+            color: #6a5acd;
+        }
+
+        .json-key {
+            color: blue;
+            font-weight: bold;
+        }
+
+        .json-value {
+            color: brown;
+        }
+
+        .json-success {
+            color: green;
+            font-weight: bold;
+        }
+
+        .json-failure {
+            color: red;
+            font-weight: bold;
+        }
+
+        pre {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+       
+        <h1>CryptoJS Encryption & Decryption</h1>
+
+        <label for="plaintext">Plaintext:</label>
+        <textarea id="plaintext" rows="10"></textarea>
+
+        <button onclick="encrypt()">Encrypt</button>
+        <button onclick="decrypt()">Decrypt</button>
+
+        <div class="box">
+            <h3>Encrypted Data:</h3>
+            <div id="encryptedData"></div>
+        </div>
+        <div class="box">
+            <h3>Decrypted Data:</h3>
+            <div id="decryptedData"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script>
+        // Convert a hex-encoded string to a WordArray object
+        function parseHexToWordArray(hexString) {
+            return CryptoJS.enc.Utf8.parse(hexString);
+        }
+
+        // Encrypt plaintext using AES with a given key and IV
+        function encryptWithAES(plaintext, key, iv) {
+            if (typeof plaintext === "object") {
+                plaintext = JSON.stringify(plaintext);
+            }
+            return CryptoJS.AES.encrypt(plaintext, key, { iv: iv }).toString();
+        }
+
+        // Decrypt ciphertext using AES with a given key and IV
+        function decryptWithAES(ciphertext, key, iv) {
+            ciphertext = ciphertext.replace(/"/g, "");
+
+            const decryptedBytes = CryptoJS.AES.decrypt(ciphertext, key, {
+                iv: iv,
+            });
+            const decryptedData = decryptedBytes.toString(CryptoJS.enc.Utf8);
+            return decryptedData;
+        }
+
+        function encrypt() {
+            document.getElementById("decryptedData").innerText = "";
+            const plaintext = document.getElementById("plaintext").value;
+            const encryptionKey = CryptoJS.enc.Utf8.parse(
+                "VLaEQrkAjtcyayabGsadsAbFdBMiMZmV"
+            ); // 128-bit key in hex
+            const iv = CryptoJS.enc.Utf8.parse("VLaEQrkAjtcyayab"); // 128-bit IV in hex
+
+            const encryptedData = encryptWithAES(plaintext, encryptionKey, iv);
+            document.getElementById("encryptedData").innerText = encryptedData;
+        }
+
+        function decrypt() {
+            document.getElementById("encryptedData").innerText = "";
+            const encryptedData = document.getElementById("plaintext").value;
+            const encryptionKey = CryptoJS.enc.Utf8.parse(
+                "VLaEQrkAjtcyayabGsadsAbFdBMiMZmV"
+            ); // Same key as used for encryption
+            const iv = CryptoJS.enc.Utf8.parse("VLaEQrkAjtcyayab"); // Same IV as used for encryption
+
+            const decryptedData = decryptWithAES(encryptedData, encryptionKey, iv);
+
+            let decryptedJson;
+            let output = "";
+            try {
+                decryptedJson = JSON.parse(decryptedData);
+                output = syntaxHighlight(decryptedJson);
+                document.getElementById(
+                    "decryptedData"
+                ).innerHTML = `<pre>${output}</pre>`;
+            } catch (error) {
+                document.getElementById(
+                    "decryptedData"
+                ).innerHTML = `<pre>${decryptedData}</pre>`;
+            }
+        }
+
+        function syntaxHighlight(json) {
+            if (typeof json != "string") {
+                json = JSON.stringify(json, undefined, 2);
+            }
+            json = json.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">");
+            return json.replace(
+                /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+                function (match) {
+                    var cls = "json-value";
+                    if (/^"/.test(match)) {
+                        if (/:$/.test(match)) {
+                            cls = "json-key";
+                        } else {
+                            cls = "json-value";
+                        }
+                    } else if (/true|false/.test(match)) {
+                        cls = "json-boolean";
+                    } else if (/null/.test(match)) {
+                        cls = "json-null";
+                    }
+                    return '<span class="' + cls + '">' + match + "</span>";
+                }
+            );
+        }
+    </script>
+</body>
+</html>
